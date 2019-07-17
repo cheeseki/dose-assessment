@@ -1,0 +1,323 @@
+                                                           File: README.TXT
+
+
+                     Weather Station Data Files
+
+
+            Center for Exposure Assessment Modeling (CEAM)
+ National Exposure Research Laboratory - Ecosystems Research Division
+               Office of Research and Development (ORD)
+           U.S. Environmental Protection Agency (U.S. EPA)
+                       960 College Station Road
+                      Athens, Georgia 30605-2700
+
+                             706/355-8400
+                             
+_____________________________________________________________________________
+
+CONTENTS
+
+  INTRODUCTION
+  DOCUMENTATION
+  INSTALLATION
+  FILE SPECIFICATION
+  CONTACT INFORMATION
+
+_____________________________________________________________________________
+
+INTRODUCTION
+
+The Weather Station Data Files contain meteorological data measured at 237
+U.S. Weather stations for a period extending nominally from 1961 to 1990.
+Exact collection dates vary by weather station. The files can be used with
+the U.S. EPA PRZM and EXAMS models.  Each data set contains one "Daily Values
+File" (.DVF), several "Hourly" values files (.Hnn), and one format file
+(.TXT).
+
+_____________________________________________________________________________
+
+DOCUMENTATION
+
+  ABSTRACT.TXT           Summary of data use and applicability.
+  
+  STATION LOCATIONS.PDF  List of the available Weather stations.
+  
+  STATION NOTES.PDF      Additional detail on station data sources.
+  
+  CITY MAP.PDF           Map of station locations with station city names.
+  
+  MLRA-WBAN.PDF          Map of station locations overlaid on MLRA.
+  
+  LEGEND.PDF             Key to Land Resource Regions 
+                         (for use with MLRA_WBAN.PDF).
+                         
+  MLRA-CODES.PDF         Key to MLRA descriptive titles 
+                         (for use with MLRA-WBAN.PDF).
+
+_____________________________________________________________________________
+
+INSTALLATION
+
+Weather Station Data Files contain the recorded weather data for 237
+meteorological stations.  All executable (.exe) files were compressed using a
+registered copy of WinZip Self-Extractor.  No other software is needed to
+extract the data.  Each file can be decompressed or "unzipped" by simply
+double-clicking the file name in Windows Explorer or My Computer.  The WinZip
+Self-Extractor user interface will allow you to extract the data files to a 
+local or network directory of your choice.  The default target directory is
+C:\metdata.  Approximately 45 MB of available disk space is required to
+decompress each self-extracting weather station data set.
+
+_____________________________________________________________________________
+
+FILE SPECIFICATION
+
+When decompressed, the data files are stored as ASCII text (non-binary) files
+and have the DOS file name extension "*.dvf" for daily values file, or
+"*.hnn" for hourly values file.
+
+The hourly data files contain recorded meteorological data from the following
+sources:
+
+  #1. Solar and Meteorological Surface Observation Network (SAMSON)
+      1961-1990 data sets, Version 1.0, Sep 1993
+
+  #2. National Solar Radiation Data base (NSRDB) version 1.1;
+      NSRDB Hourly Data Files Text files downloaded from
+      http://rredc.nrel.gov/solar/old_data/nsrdb/hourly/
+      -- provided updated radiation parameters.
+
+  #3. EarthInfo NCDC Summary of the Day and Surface Airways, 2001 -- 
+      provided daily and hourly values for precipitation, and daily
+      evaporation.  Missing evaporation was calculated using the
+      Kohler-Nordenson-Fox Class-A Evaporation Pan version of the Penman-
+      Monteith equations.
+
+  #4. Evapotranspiration (Et0) formulae based on: Crop Evapotranspiration -
+      Guidelines for Computing Crop water requirements. FAO Irrigation and
+      Drainage Paper 56 by Richard G. Allen, Luis S. Pereira, Dirk Raes, and
+      Martin Smith. Water Resources, Development and Management Service,
+      FAO - Food and Agriculture Organization of the United Nations, Rome,
+      1998. ISBN 92-5-104219-5.  This book may be found online at
+      http://www.fao.org/docrep/X0490E/x0490e00.htm
+          
+Each directory contains "Hourly" values files (*.hnn), a "Daily Values File"
+(*.dvf), and a format file (*.txt). The name of the file is of the form
+"wnnnnn", where "nnnnn" represents the WBAN (Weather Bureau Army Navy)
+identification number of the weather station. For more information on WBAN
+numbers see http://lwf.ncdc.noaa.gov/oa/climate/stationlocator.html
+       
+Gaps in the hourly data record were filled according to methods described in
+National Solar Radiation Data Base User's Manual (1961-1990), NSRDB Volume 1,
+September 1991, Section 5.2.1. The document may be downloaded from
+http://rredc.nrel.gov/solar/pubs/NSRDB/NSRDB_index.html. In general,
+
+  #1. Gaps of less than 6 hours were filled by linear interpolation between
+      points at both sides of the gap.
+  #2. Gaps of 6 hours to 49 hours were filled by copying data from the 
+      previous (or following) day.
+  #3. Longer gaps of 50 hours to 8784 hours (one leap year) were filled by
+      copying data for the same period from some other year.
+
+The daily values were obtained by computing the mean over 24 hours, or by
+adding the values over one day, as appropriate.
+
+PRZM and EXAMS can use the "Daily Values File" data files (*.dvf).
+
+All decompressed, "Daily Values File" data files (*.dvf) have the following
+format:
+
+Field  Columns   Description            Units                    Type        Format
+-----  --------  ---------------------- ---------------          ---------   ------
+  1        1     blank                  N/A                      Character   1x
+  2     02 - 07  Date                   mmddyy                   Integer     3i2
+  3     08 - 17  Precipitation          cm/day                   Real        f10.2
+  4     18 - 27  Pan Evaporation        cm/day                   Real        f10.2
+  5     28 - 37  Temperature (mean)     degrees Centigrade       Real        f10.1
+  6     38 - 47  Wind Speed @10 meter   cm/second                Real        f10.1
+  7     48 - 57  Solar Radiation        Langleys/day             Real        f10.1
+  8     58 - 63  FAO Short Grass Eto    mm/day                   Real        f6.1
+  9     64 - 73  Daylight Station       kiloPascal               Real        f10.1
+                   Pressure
+ 10     74 - 77  Daylight Relative      percent                  Integer     i4
+                   Humidity
+ 11     78 - 80  Daylight Opaque        tenths of sky covered    Integer     i3
+                   Sky Cover
+ 12     81 - 90  Daylight Temperature   degrees Centigrade       Real        f10.1
+ 13     91 - 96  Daylight Broadband     optical depth            Real        f6.3
+                   Aerosol
+ 14     97 -102  Daylight Prevailing    meter/second             Real        f6.1
+                   Wind Speed @10 meter
+ 15    103 -106  Daylight Prevailing    degrees (N=0, E=90, ...) Integer     i4
+                   Wind Direction
+
+Daily values file format: (1x,3i2, t8,f10.2, t18,f10.2, t28,f10.1, t38,f10.1, &
+                          t48,f10.1, t58,f6.1, t64,f10.1, t74,i4, t78,i3, &
+                          t81,f10.1, t91,f6.3, t97,f6.1, t103,i4)
+
+Fields 03 - 08 represent daily totals or mean values (Wind Speed and Temperature)
+Fields 03 - 07 units preserved from earlier PRZM met files for compatibility
+Fields 09 - 15 represent mean values for daylight hours only.
+
+
+Hourly values files (*.hnn) contain hourly data for the year 19nn.
+For example, w25501.h65 contains 1965 hourly data for Kodiak, AK.
+
+The hourly values file has a header containing identifying information.
+Example:
+ 25501 Kodiak                         AK  +9  N  57 45  W 152 30     5   2002-05-17 22:47:31
+
+Header
+Field  Columns  Description              Type        Format
+-----  -------  ----------------------   ---------   ------
+  1       1     blank                    Character   1x
+  2    02 - 06  WBAN id                  Character   a5
+  3    08 - 37  City where the           Character   a30
+                   station is located.
+  4    39 - 40  State  where the         Character   a2
+                   station is located.
+  5    42 - 44  Time Zone                Character   a3
+
+  6    47 - 54  Latitude of the station
+       47 - 47  N: North of the Equator  Character   a1
+                S: South
+       48 - 51  Degrees                  Integer     i4
+       53 - 54  Minutes                  Integer     i2
+
+  7    57 - 64  Longitude of the station
+       57 - 57  W: West                  Character   a1
+                E: East
+       58 - 61  Degrees                  Integer     i4
+       63 - 64  Minutes                  Integer     i2
+
+  8    67 - 70  Station Elevation(meter) Integer     i4
+
+  9    74 - 92  Generation date of the   Character   a19
+                file, i.e, yyyy-mm-dd hh:mm:ss
+                where
+                   yyyy: year
+                   mm: month
+                   dd: day of the month
+                   hh: hour (24-hour clock)
+                   mm: minutes
+                   ss: seconds
+
+Header format: (1x, a5, 1x, a30, 1x, a2, 1x, a3, &
+               2x, a1, i4, 1x, i2, &
+               2x, a1, i4, 1x, i2, &
+               2x, i4, 3x, a19)
+
+Field   Columns   Description            Units                  Type        Format
+-----  ---------  ---------------------- ---------------        ---------   ------
+  1        1      blank                  N/A                    Character   1x
+  2    002 - 011  Date                   yyyy-mm-dd             Integer     i4,1x,i2,1x,i2
+  3    012 - 014  *Hour of the day       Hour                   Integer     i3
+  4    016 - 021  Extraterrestrial       *Wh/m2                 Integer     i5,a1
+                   Horizontal
+                   Radiation (Ra)
+  5    023 - 028  Extraterrestrial       Wh/m2                  Integer     i5,a1
+                   Direct Normal Radiation
+  6    030 - 037  Global Horizontal      Wh/m2                  Integer     i5,a3
+                   Radiation (Rs)
+  7    039 - 046  Direct Normal          Wh/m2                  Integer     i5,a3
+                   Radiation
+  8    048 - 055  Diffuse Horizontal     Wh/m2                  Integer     i5,a3
+                   Radiation
+  9    057 - 059  Total Sky Cover        tenths of sky covered  Integer     i2,a1
+ 10    061 - 063  Opaque_Sky_Cover       tenths of sky covered  Integer     i2,a1
+ 11    065 - 070  Dry Bulb Temperature   degrees Centigrade     Real        f5.1,a1
+ 12    072 - 077  Dew Point Temperature  degrees Centigrade     Real        f5.1,a1
+ 13    079 - 082  Relative_Humidity      percent                Integer     i3,a1
+ 14    084 - 089  Station_Pressure       *kPa                   Real        f5.1,a1
+ 15    091 - 094  Wind_Direction         degrees(N=0,E=90,...)  Integer     i3,a1
+ 16    096 - 101  Wind_Speed @10meter    m/s                    Real        f5.1,a1
+ 17    103 - 109  Horizontal Visibility  km                     Real        f6.1,a1
+ 18    111 - 117  Ceiling Height         m                      Integer     i6,a1
+ 19    119 - 120  Observation Indicator  N/A                    Integer     i1,a1
+ 20    122 - 131  Present_weather        N/A                    Character   a9,a1
+ 21    133 - 136  Precipitable Water     mm                     Integer     i3,a1
+ 22    138 - 144  Broadband Aerosol      Optical_Depth          Real        f6.3,a1
+ 23    146 - 150  Snow Depth             cm                     Integer     i4,a1
+ 24    152 - 155  Days since last        day                    Integer     i3,a1
+                   Snowfall
+ 25    157 - 164  Hourly Precipitation   cm                     Real        f6.2,a2
+ 26    166 - 172  Eto, FAO Short Grass   mm/day                 Real        f6.2,a1
+ 27    174 - 180  Ep, Class A pan        mm/day                 Real        f6.2,a1
+                    Evaporation
+
+*Hour of the day: The range of the hour of the day is 1h to 25h:
+ 1h-24h: line contains data for the hour
+ 25: line contains daily values
+
+*Wh/m2: Watt hour meter^-2
+ Watt hour meter^-2 is equivalent to 3.6e-3 MJoule meter^-2
+ Watt hour meter^-2 is equivalent to 8.59845e-02 Langley
+
+*kPa: kiloPascal
+1 kiloPascal is equivalent to 10 millibar
+
+Fields 26 and 27 represent daily totals. These fields are present
+only when the hour of the day (field 3) is 25.
+
+Generally, each value has one or more character flags associated with it.
+When possible, the flags associated with the original datum are copied to
+the Hourly Values File (*.hnn).
+
+    'W' = Measured value (SAMSON flag)
+    'B' = Calibrated (SAMSON flag)
+    'D' = Deleted (SAMSON flag)
+    'E' = Estimated.
+    '-' = Missing value
+    'R' = Datum from EarthInfo data 2001
+    'S' = Datum from SAMSON version 1.0
+    'T' = Datum from SAMSON version 1.1
+    'U' = Unlimited in Visibility or Ceiling Height or
+          Short-gap interpolation with either of the
+          endpoints being Unlimited or Cirroform.
+    'Z' = Cirroform in Ceiling Height data
+    '?' = Value is undefined, given the context,
+          e.g., Dew point is undefined if the Relative Humidity is zero.
+    '#' = If the station is above the Arctic Circle (Latitude 66.5 degrees North),
+          then the region will be in darkness for a period of the year. This
+          prevents the computation of, e.g., Daylight value of Global Horizontal
+          Radiation and Reference Crop Evapotranspiration (Eto)
+    'A' = Accumulation (SAMSON flag). The precipitation is distributed in the
+          observation interval.
+
+Missing values are denoted by '---' in the numeric value field and
+flag value of '-'
+
+Hourly values file format: (1x,i4,1x,i2,1x,i2, i3, t16,i5,a1, t23,i5,a1, &
+                           t30,i5,a3, t39,i5,a3, t48,i5,a3, &
+                           t57,i2,a1, t61,i2,a1, t65,f5.1,a1, t72,f5.1,a1, &
+                           t79,i3,a1, t84,f5.1,a1, t91,i3,a1, t96,f5.1,a1, &
+                           t103,f6.1,a1, t111,i6,a1, t119,i1,a1, t122,a9,a1, &
+                           t133,i3,a1, t138,f6.3,a1, t146,i4,a1, t152,i3,a1, &
+                           t157,f6.2,a2, t166,f6.2,a1, t174,f6.2,a1)
+
+_____________________________________________________________________________
+
+CONTACT INFORMATION
+
+For information concerning installation of the Weather Station Data Files, 
+contact the Center for Exposure Assessment Modeling (CEAM):
+
+  phone: 706/355-8400
+  
+  fax:   706/355-8104
+  
+  email: ceam@epamail.epa.gov
+  
+  mail:  Center for Exposure Assessment Modeling (CEAM)
+         National Exposure Research Laboratory - Ecosystems
+         Research Division
+         U.S. Environmental Protection Agency (U.S. EPA)
+         960 College Station Road
+         Athens, Georgia 30605-2700
+
+CEAM software products and their status are available through the World Wide
+Web (WWW) at the following Uniform Resource Locator (URL):
+
+         http://www.epa.gov/ceampubl/
+
+_____________________________________________________________________________

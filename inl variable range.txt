@@ -1,0 +1,7 @@
+temperature uniform distribution [8.494, 9.536]
+
+wind speed
+normal distribution mean=4.537 std.deviation=0.4086
+
+relative humidity 
+normal distribution mean=57.69 std.deviation=3.0895
