@@ -218,38 +218,50 @@ def write_met_windsp(data, day_summary, wind_sp, LHS_sample, j):
 	return
 
 def main():
-
+	LHS_wsp = [0.702196949, 0.797345616, 0.799393257, 0.818852019, 0.733081286, 0.757129555, 0.740641776, \
+	0.682300057, 0.679752482, 0.790468512, 0.737800953, 0.964953276, 0.825373034, 0.797932867, 0.823356475, \
+	0.933647114, 0.764326099, 0.896537429, 0.881493846, 0.855096385, 0.644490812, 0.747785152, 0.728371452, \
+	0.809065314, 0.689327083, 0.753076147, 0.866987074, 0.724965754, 0.622185518, 0.997817455, 0.804625284, \
+	0.722450914, 0.767514008, 0.831207138, 0.795283947, 0.769855504, 0.802349715, 0.707202646, 0.847421998, \
+	0.850564801, 0.780627251, 0.834168779, 0.758765349, 0.828692232, 0.698743496, 0.78428149, 0.814239895, \
+	0.695466657, 0.664719046, 0.743111707, 0.771063794, 0.836849087, 0.686420438, 0.890005322, 0.718203575, \
+	0.756214066, 0.762354489, 0.921124353, 0.705039775, 0.876271537, 0.791374286, 0.739227836, 0.884075041, \
+	0.78826593, 0.772085483, 0.845731722, 0.750494962, 0.915385521, 0.793123133, 0.838562406, 0.81571178, \
+	0.713184742, 0.85210692, 0.869988344, 0.636702177, 0.806184225, 0.725754191, 0.832832006, 0.78135414, \
+	0.839597199, 0.787703573, 0.800854666, 0.714683138, 0.751818225, 0.731216711, 0.862275636, 0.928232243, \
+	0.808056391, 0.877553142, 0.940941494, 0.811479075, 0.841190463, 0.760882565, 0.776501414, 0.671292848, \
+	0.844207141, 0.744261513, 0.858974777, 0.952955185, 0.778667542, 0.746036921, 0.649678476, 0.899674467, \
+	0.821454482, 0.765118113, 0.907548866, 0.826876695, 0.812399255, 0.785003885, 0.873358363, 0.658223329, \
+	0.776385284, 0.735083099, 0.709068426, 0.694214397, 0.886138852, 0.675136868, 0.903892859, 0.820336552, \
+	0.615110561, 0.579430497, 0.864905612, 0.774623987, 0.8571112, 0.720522715]
 	latti = 46.55 # site lattitude 
-	# data, day_summary = load_data('{0}pred_T.h90'.format(j))
-	data, day_summary = load_data('pred10.h90')
-	# precipitation rate [mm/hr]
-	date, hour, temp, wind_dir, wind_sp, wind_sp_knot, \
-	ceiling, sky_cover_total, humidity_rel, preci = columns(data)
-	solar = []
-	net_ra = []
-	sta_class = []
-	for i in range(len(temp)):
-		solar.append(solar_angle(latti, hour[i], i+1))
-		net_ra.append(net_radiation_index(sky_cover_total[i], ceiling[i], hour[i], solar[i], preci[i]))
-		sta_class.append(stability(net_ra[i], wind_sp_knot[i]))
-		i += 1
-		dictionary = {
-	            "temperature": temp,
-	            "temp_day_average": variation(temp),
-	            "wind speed": wind_sp, 
-	            "wind_sp_day_average": variation(wind_sp),
-	            "humidity_relative": humidity_rel,
-	            "humidity_rel_day_average": variation(humidity_rel),
-	            "hourly precipitation": preci,
-	            "stability class": sta_class
-	            }
-	
-	plt.scatter(temperature, wind_sp)
-	plt.xlabel('temperature')
-	plt.ylabel('wind speed')
-	plt.show()
-	# change wind speed
-	# write_met_windsp(data, day_summary, wind_sp, LHS_wsp[j], j)
+	for j in range(125):
+		data, day_summary = load_data('{0}pred_T.h90'.format(j))
+		# data, day_summary = load_data('w24243.h90')
+		# precipitation rate [mm/hr]
+		date, hour, temp, wind_dir, wind_sp, wind_sp_knot, \
+		ceiling, sky_cover_total, humidity_rel, preci = columns(data)
+		solar = []
+		net_ra = []
+		sta_class = []
+		for i in range(len(temp)):
+			solar.append(solar_angle(latti, hour[i], i+1))
+			net_ra.append(net_radiation_index(sky_cover_total[i], ceiling[i], hour[i], solar[i], preci[i]))
+			sta_class.append(stability(net_ra[i], wind_sp_knot[i]))
+			i += 1
+			dictionary = {
+		            "temperature": temp,
+		            "temp_day_average": variation(temp),
+		            "wind speed": wind_sp, 
+		            "wind_sp_day_average": variation(wind_sp),
+		            "humidity_relative": humidity_rel,
+		            "humidity_rel_day_average": variation(humidity_rel),
+		            "hourly precipitation": preci,
+		            "stability class": sta_class
+		            }
+		
+		# change wind speed
+		write_met_windsp(data, day_summary, wind_sp, LHS_wsp[j], j)
 	return
 
 if __name__ == '__main__':

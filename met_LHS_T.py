@@ -192,6 +192,31 @@ def change_temp(dry_bulb, RH):
 		dew_point.append(c*gamma/(b-gamma))
 	return dew_point
 
+def write_met_temp(data, day_summary, temperature, RH, LHS_T, j):
+	for i in range(len(temperature)):
+		temperature[i] = temperature[i]+LHS_T
+	dew_point = change_temp(temperature, RH)
+	with open('{0}pred_T.h90'.format(j), 'w') as f:
+		for i in range(len(data)+len(day_summary)):
+			if i == 0:
+				f.write(' 24243 Yakima                         WA  +8  N  46 34  W 120 32   324   2002-07-02 16:28:53\n')
+			elif i%25 == 0:
+				j = int(np.floor(i/25))
+				k = day_summary[j]
+				f.write('{0:>11s}{1:>3s}{2:>7s}{3:>7s}{4:>7s}  {5:>7s}  {6:>7s}  {7:>4s}{8:>4s}{9:>7s}{10:>7s}{11:>5s}{12:>7s}{13:>5s}{14:>7s}{15:>8s}{16:>8s}{17:>3s}{18:>11s}{19:>5s}{20:>8s}{21:>6s}{22:>5s}{23:>8s}{24:>9s}{25:>8s}\n'\
+					.format(k[0], k[1], k[2], k[3], k[4], k[5], k[6], k[7], k[8], k[9], \
+						k[10], k[11], k[12], k[13], k[14], k[15], k[16], k[17], k[18], k[19], \
+						k[20], k[21], k[22], k[23], k[24], k[25]))
+			else:
+				j = int(i-1-np.floor(i/25))
+				k = data[j]
+				k[9] = temperature[j]
+				k[10] = dew_point[j]
+				f.write('{0:>11s}{1:>3s}{2:>7s}{3:>7s}{4:>9s}{5:>9s}{6:>9s}{7:>4s}{8:>4s}{9:>6.1f}S{10:>6.1f}S{11:>5s}{12:>7s}{13:>5s}{14:>7s}{15:>8s}{16:>8s}{17:>3s}{18:>11s}{19:>5s}{20:>8s}{21:>6s}{22:>5s}{23:>8s}\n'\
+					.format(k[0], k[1], k[2], k[3], k[4], k[5], k[6], k[7], k[8], k[9], \
+						k[10], k[11], k[12], k[13], k[14], k[15], k[16], k[17], k[18], k[19], \
+						k[20], k[21], k[22], k[23]))
+	return
 
 def write_met_windsp(data, day_summary, wind_sp, LHS_sample, j):
 	for i in range(len(wind_sp)):
@@ -218,38 +243,52 @@ def write_met_windsp(data, day_summary, wind_sp, LHS_sample, j):
 	return
 
 def main():
-
+	LHS_T = [1.200017745, 0.61555346, 1.991196343, 1.153709643, 0.840418888, 0.954809312, 1.279919371, \
+	1.10139236, 1.786844136, 1.689035058, 0.468459876, 0.551181578, 1.181474041, 1.972331317, 2.092042301, \
+	1.637673317, 0.997751101, 2.281726485, 0.782075039, 0.506037175, 1.835072525, 1.925134675, 2.326902284, \
+	1.949667059, 2.465476331, 1.395212298, 2.551580851, 2.584099515, 1.382280278, 2.215679833, 2.310216734, \
+	2.409996197, 1.166310705, 1.907866504, 2.458522331, 2.06476081, 2.387773492, 1.123602596, 2.180962793, \
+	2.594658976, 1.009795126, 0.692084034, 2.127751771, 1.480669209, 2.559538867, 1.302809397, 0.790560258, \
+	1.717870502, 2.37167162, 1.609858068, 0.915362801, 1.33175337, 1.044011035, 0.574813202, 1.526840444, \
+	2.256774326, 1.425683385, 0.859054658, 2.288508649, 2.046423754, 1.966973206, 1.562293223, 1.461427715, \
+	0.879668354, 1.411159409, 2.60940271, 1.295087011, 1.72583974, 1.228526576, 1.891287104, 0.747245331, \
+	0.760756615, 0.580943783, 1.79541908, 2.234978755, 2.037613941, 1.868759413, 0.608984483, 1.367434135, \
+	2.231698419, 2.189628111, 1.025447336, 0.831952858, 0.631607582, 1.748183106, 1.445698054, 0.478331866, \
+	1.063374548, 1.117622477, 2.005053903, 2.158756378, 1.496504932, 0.654569536, 1.54008059, 1.81723365, \
+	1.08677214, 0.732823155, 0.805937208, 2.623925831, 1.248698841, 2.129649278, 1.569052034, 2.096764278, \
+	2.504139956, 1.683416389, 1.62599806, 1.655355535, 0.504475844, 2.435984975, 2.349903842, 1.774134884, \
+	0.902614101, 0.930892659, 0.528894814, 1.338526156, 1.582173679, 1.857664737, 0.438400551, 0.6655849, \
+	1.220431178, 0.971801323, 2.487215678, 2.419864694, 2.530794942, 0.712297322]
 	latti = 46.55 # site lattitude 
-	# data, day_summary = load_data('{0}pred_T.h90'.format(j))
-	data, day_summary = load_data('pred10.h90')
-	# precipitation rate [mm/hr]
-	date, hour, temp, wind_dir, wind_sp, wind_sp_knot, \
-	ceiling, sky_cover_total, humidity_rel, preci = columns(data)
-	solar = []
-	net_ra = []
-	sta_class = []
-	for i in range(len(temp)):
-		solar.append(solar_angle(latti, hour[i], i+1))
-		net_ra.append(net_radiation_index(sky_cover_total[i], ceiling[i], hour[i], solar[i], preci[i]))
-		sta_class.append(stability(net_ra[i], wind_sp_knot[i]))
-		i += 1
-		dictionary = {
-	            "temperature": temp,
-	            "temp_day_average": variation(temp),
-	            "wind speed": wind_sp, 
-	            "wind_sp_day_average": variation(wind_sp),
-	            "humidity_relative": humidity_rel,
-	            "humidity_rel_day_average": variation(humidity_rel),
-	            "hourly precipitation": preci,
-	            "stability class": sta_class
-	            }
-	
-	plt.scatter(temperature, wind_sp)
-	plt.xlabel('temperature')
-	plt.ylabel('wind speed')
-	plt.show()
-	# change wind speed
-	# write_met_windsp(data, day_summary, wind_sp, LHS_wsp[j], j)
+	for j in range(125):
+	# 	data, day_summary = load_data('{0}pred_T.h90'.format(j))
+		data, day_summary = load_data('w24243.h90')
+		# precipitation rate [mm/hr]
+		date, hour, temp, wind_dir, wind_sp, wind_sp_knot, \
+		ceiling, sky_cover_total, humidity_rel, preci = columns(data)
+		solar = []
+		net_ra = []
+		sta_class = []
+		for i in range(len(temp)):
+			solar.append(solar_angle(latti, hour[i], i+1))
+			net_ra.append(net_radiation_index(sky_cover_total[i], ceiling[i], hour[i], solar[i], preci[i]))
+			sta_class.append(stability(net_ra[i], wind_sp_knot[i]))
+			i += 1
+			dictionary = {
+		            "temperature": temp,
+		            "temp_day_average": variation(temp),
+		            "wind speed": wind_sp, 
+		            "wind_sp_day_average": variation(wind_sp),
+		            "humidity_relative": humidity_rel,
+		            "humidity_rel_day_average": variation(humidity_rel),
+		            "hourly precipitation": preci,
+		            "stability class": sta_class
+		            }
+		
+		# change temperature
+		write_met_temp(data, day_summary, temp, humidity_rel, LHS_T[j], j)
+		# # change wind speed
+		# write_met_windsp(data, day_summary, wind_sp, LHS_wsp[j], j)
 	return
 
 if __name__ == '__main__':
